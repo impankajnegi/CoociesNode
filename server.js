@@ -5,11 +5,12 @@ const express = require("express");
 const app = express();
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-const initializePassport = require("./passport-config");
+const initializePassport = require("./src/auth/passport-config");
 const flash = require("express-flash");
 const session = require("express-session");
 const { response } = require("express");
 const methodOverride = require("method-override");
+const { checkNotAuthenticated, checkAuthenticated } = require("./src/middlewares/passport.middleware");
 
 initializePassport(
   passport,
@@ -83,18 +84,6 @@ app.delete("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-function checkAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  return res.redirect("/login");
-}
 
-function checkNotAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return res.redirect("/");
-  }
-  next();
-}
 
 app.listen(3000);
